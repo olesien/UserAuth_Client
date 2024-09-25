@@ -12,14 +12,27 @@ public class User {
 
     private String password;
 
-    User(int id, String name, String email, int age, String gender, String password) {
+    private boolean cookieConsent;
+
+    private boolean dataConsent;
+
+    User(int id, String name, String email, int age, String gender, String password, boolean cookieConsent, boolean dataConsent) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.age = age;
         this.gender = gender;
         this.password = password;
+        this.cookieConsent = cookieConsent;
+        this.dataConsent = dataConsent;
+    }
 
+    public boolean isDataConsent() {
+        return dataConsent;
+    }
+
+    public void setDataConsent(boolean dataConsent) {
+        this.dataConsent = dataConsent;
     }
 
     public int getId() {
@@ -68,5 +81,13 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public boolean isCookieConsent() {
+        return cookieConsent;
+    }
+
+    public void setCookieConsent(boolean cookieConsent) {
+        this.cookieConsent = cookieConsent;
     }
 }

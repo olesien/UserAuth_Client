@@ -30,9 +30,9 @@ public class Main {
     }
 
     static void run(Connection con, BufferedReader reader) throws IOException, NoSuchAlgorithmException, SQLException {
-        System.out.println("Nyhetssida -> Kontohantering\n1. Skapa Konto\n2. Visa Konton \n3. Radera Konto\n4. Avsluta\n Välj ett alternativ: ");
+        System.out.println("Nyhetssida -> Kontohantering\n1. Skapa Konto\n2. Visa Konton \n3. Radera Konto\n4. Uppdatera samtycke\n5. Avsluta\n Välj ett alternativ: ");
         String character = reader.readLine();
-        UserRepo userRepo = new UserRepo(con);
+        UserAPI userRepo = new UserAPI(con);
 
         switch (character) {
             case "1": {
@@ -54,8 +54,14 @@ public class Main {
                 String password = reader.readLine();
 
                 String hashedPassword = hashPassword(password);
-                userRepo.createUser(name, email, age, gender, hashedPassword);
-                System.out.println("Konto sparat!");
+                boolean success = userRepo.createUser(name, email, age, gender, hashedPassword);
+                if (success) {
+                    System.out.println("Konto sparat!");
+
+                } else {
+                    System.out.println("Konto har inte sparats! : (");
+
+                }
                 break;
             }
             case "2": {
@@ -70,12 +76,34 @@ public class Main {
                 System.out.println("Ange användar-ID att radera: ");
                 int id = Integer.parseInt(reader.readLine());
                 //Delete
-                userRepo.deleteUser(id);
+                boolean success = userRepo.deleteUser(id);
+                if (success) {
+                    System.out.println("Konto borttaget!");
+                } else {
+                    System.out.println("Konto kunde tyvärr inte tas bort");
+                }
 
-                System.out.println("Konto borttaget!");
                 break;
             }
             case "4": {
+                System.out.println("Ange användar-ID att uppdatera: ");
+                int id = Integer.parseInt(reader.readLine());
+
+                System.out.println("Samtycke för cookies (true/false): ");
+                boolean cookies = Boolean.parseBoolean(reader.readLine());
+
+                System.out.println("Samtycke för dataanvändning (true/false): ");
+                boolean data = Boolean.parseBoolean(reader.readLine());
+
+                boolean success = userRepo.updateConsent(id, cookies, data);
+                if (success) {
+                    System.out.println("Samtycke uppdaterat!");
+                } else {
+                    System.out.println("Samtycke kunde tyvärr ej uppdateras. Har du rätt ID?");
+                }
+                break;
+            }
+            case "5": {
                 return;
             }
             default: {
