@@ -8,19 +8,15 @@ import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class UserAPI {
     String baseURL = "http://localhost:8000";
-    Connection con;
 
-    UserAPI(Connection con) {
-        this.con = con;
+    UserAPI() {
     }
-    boolean createUser(String name, String email, int age,  String gender, String password) throws IOException {
+    boolean createUser(String name, String email, Integer age,  String gender, String password) throws IOException {
         User user = new User(0, name, email, age, gender, password, false, false);
         Gson gson = new Gson();
         String body = gson.toJson(user);

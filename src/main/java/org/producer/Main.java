@@ -7,7 +7,6 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.sql.*;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -29,10 +28,10 @@ public class Main {
         return sb.toString();
     }
 
-    static void run(Connection con, BufferedReader reader) throws IOException, NoSuchAlgorithmException, SQLException {
-        System.out.println("Nyhetssida -> Kontohantering\n1. Skapa Konto\n2. Visa Konton \n3. Radera Konto\n4. Uppdatera samtycke\n5. Avsluta\n Välj ett alternativ: ");
+    static void run(BufferedReader reader) throws IOException, NoSuchAlgorithmException {
+        System.out.println("Leveranstjänst -> Kontohantering\n1. Skapa Konto\n2. Visa Konton \n3. Radera Konto\n4. Uppdatera samtycke\n5. Avsluta\n Välj ett alternativ: ");
         String character = reader.readLine();
-        UserAPI userRepo = new UserAPI(con);
+        UserAPI userRepo = new UserAPI();
 
         switch (character) {
             case "1": {
@@ -41,10 +40,19 @@ public class Main {
                 String name = reader.readLine();
                 System.out.println("Ange E-post: ");
                 String email = reader.readLine();
-                System.out.println("Ange Ålder: ");
-                int age = Integer.parseInt(reader.readLine());
-                System.out.println("Ange Kön (M/F/Other: ");
+                System.out.println("Ange Ålder (kan lämna blankt): ");
+                String ageText = reader.readLine();
+                Integer age;
+                if (!Objects.equals(ageText, "")) {
+                    age = Integer.parseInt(ageText);
+                } else {
+                    age = null;
+                }
+                System.out.println("Ange Kön (M/F/Other)  (kan lämna blankt): ");
                 String gender = reader.readLine();
+                if (Objects.equals(gender, "")) {
+                    gender = null;
+                } else
                 if (!Objects.equals(gender, "M") && !Objects.equals(gender, "F") && !Objects.equals(gender, "Other")) {
                     //Error
                     System.out.println("Du måste skriva exakt M/F/Other");
@@ -111,17 +119,37 @@ public class Main {
                 break;
             }
         }
-        run(con, reader);
+        run(reader);
     }
     public static void main(String[] args) throws IOException {
         BufferedReader reader = new BufferedReader(
                 new InputStreamReader(System.in));
-        System.out.println("Hello world!");
-        try (var con =  DB.connect()){
-            run(con, reader);
+        System.out.println("REQ");
+//        //Req test
+//        int i = 0;
+//        while (i < 1000) {
+//            i++;
+//            System.out.println(i);
+//            Thread thread = new Thread(() -> {
+//                URL url = null;
+//                try {
+//                    url = new URL("http://localhost:8080/test");
+//                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+//                    conn.setRequestMethod("GET");
+//                    conn.connect();
+//                    System.out.println(conn.getResponseCode());
+//                } catch (MalformedURLException e) {
+//                    System.out.println(e);
+//                } catch (IOException e) {
+//                    System.out.println(e);
+//                }
+//
+//            });
+//            thread.start();
+//        }
+        try {
+            run(reader);
 
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
